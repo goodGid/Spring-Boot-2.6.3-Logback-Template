@@ -1,0 +1,50 @@
+<included>
+  <!-- logback-variables.properties에 정의되어 있는 Key를 사용하기 위한 코드 -->
+  <property resource="logback-variables.properties" />
+
+  <appender name="REQUEST" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/request.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/archive/request.log.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize> <!-- 한 파일의 최대 용량 -->
+      </timeBasedFileNamingAndTriggeringPolicy>
+      <maxHistory>30</maxHistory> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+      <!--
+      ## outputPatternAsHeader
+      - File 헤더에 pattern을 출력한다.
+      - ref : https://logback.qos.ch/manual/encoders.html#outputPatternAsHeader
+      ex) #logback.classic pattern: [%-5level] %d{yyyy-MM-dd HH:mm:ss} [%thread] [%logger{0}:%line] - %msg%n
+      -->
+      <outputPatternAsHeader>true</outputPatternAsHeader>
+    </encoder>
+  </appender>
+
+  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/error.log</file>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>error</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/archive/error.log.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize> <!-- 한 파일의 최대 용량 -->
+      </timeBasedFileNamingAndTriggeringPolicy> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>60</maxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+      <outputPatternAsHeader>true</outputPatternAsHeader>
+    </encoder>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="REQUEST" />
+    <appender-ref ref="ERROR" />
+  </root>
+</included>

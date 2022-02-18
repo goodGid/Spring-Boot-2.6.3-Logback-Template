@@ -1,0 +1,31 @@
+<included>
+  <!--
+  ## "org/springframework/boot/logging/logback/console-appender.xml"에 정의되어 있는 appender는 다음과 같다.
+  	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>${CONSOLE_LOG_CHARSET}</charset>
+		</encoder>
+	</appender>
+
+	그리고 저기서 사용하는 ${CONSOLE_LOG_PATTERN}과 ${CONSOLE_LOG_CHARSET}은
+	logback-spring.xml에서 include한
+	"org/springframework/boot/logging/logback/defaults.xml"에 정의되어 있다.
+  -->
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+  <logger name="org.hibernate.SQL" additivity="false">
+    <level value="DEBUG" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <logger name="org.hibernate.type" additivity="false">
+    <level value="TRACE" />
+    <appender-ref ref="CONSOLE" />
+  </logger>
+
+  <root level="DEBUG">
+    <appender-ref ref="CONSOLE" />
+  </root>
+
+</included>
