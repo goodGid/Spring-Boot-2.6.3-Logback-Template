@@ -43,8 +43,34 @@
     </encoder>
   </appender>
 
+  <appender name="QUERY" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOG_DIR}/query.log</file>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+    </filter>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_DIR}/archive/query.log.%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>10MB</maxFileSize> <!-- 한 파일의 최대 용량 -->
+      </timeBasedFileNamingAndTriggeringPolicy> <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
+      <maxHistory>60</maxHistory>
+    </rollingPolicy>
+    <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+      <pattern>${LOG_PATTERN}</pattern>
+      <outputPatternAsHeader>true</outputPatternAsHeader>
+    </encoder>
+  </appender>
+
   <root level="INFO">
     <appender-ref ref="REQUEST" />
     <appender-ref ref="ERROR" />
   </root>
+
+  <!--
+  - Custom하게 생성한 logger 사용법은 'QueryController'를 참고하자.
+  ex) LoggerFactory.getLogger("SQL_LOG");
+  -->
+  <logger name="SQL_LOG" level="INFO" additivity="false">
+    <appender-ref ref="QUERY"/>
+  </logger>
+
 </included>
